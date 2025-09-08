@@ -5,7 +5,7 @@ exec >& /root/azuredeploy.log.$$
 
 SLURMVERSION=20.11.9
 
-# This script can be found on https://raw.githubusercontent.com/ARCLeeds/az-slurm/main/CentOS/azuredeploy.sh
+# This script can be found on https://raw.githubusercontent.com/jhodrien/az-slurm/main/CentOS/azuredeploy.sh
 # This script is part of azure deploy ARM template
 # This script will install SLURM on a Linux cluster deployed on a set of Azure VMs
 
