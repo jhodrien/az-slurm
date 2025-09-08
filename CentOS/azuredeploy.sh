@@ -44,8 +44,8 @@ ssh_known_hosts=/tmp/ssh_known_hosts.$$
 shosts_equiv=/tmp/shosts.equiv.$$
 
 # Enable EPEL and get a JSON parser
-/usr/bin/crb enable
 yum -y install epel-release
+/usr/bin/crb enable
 yum -y install jq
 
 JSON=$(echo $BASE64_ENCODED | base64 --decode)
