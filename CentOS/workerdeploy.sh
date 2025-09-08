@@ -8,18 +8,18 @@ sed -i 's/SELINUX=enforcing/SELINUX=permissive/' /etc/selinux/config
 
 # Sort EPEL out early
 yum -y install epel-release
+/usr/bin/crb enable
 
 # Just discover if we have an nvidia card, and update and install a driver if so
 #if lspci|grep -i nvidia;then
 # Install CUDA everywhere, as it also get us working OpenCL
 if true;then
-  yum -y install dkms kernel-devel
-  CUDA_REPO_PKG=cuda-repo-rhel7-10.2.89-1.x86_64.rpm
-  yum -y install --nogpg http://developer.download.nvidia.com/compute/cuda/repos/rhel9/x86_64/${CUDA_REPO_PKG}
-  yum -y upgrade --exclude=WALinuxAgent
-  PACKAGE=cuda-12-6
+  yum -y install dkms kernel-devel pciutils
+  dnf config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/rhel9/x86_64/cuda-rhel9.repo
+  yum -y upgrade
+  PACKAGE=cuda-toolkit
   if lspci|grep -i "Tesla T4";then
-    PACKAGE+=" nvidia-driver-branch-470.x86_64"
+    PACKAGE+=" nvidia-open"
   fi
   yum -y install --nogpg $PACKAGE
   cat > /etc/profile.d/nvidia.sh <<'EOB'
@@ -46,7 +46,7 @@ EOB
 mount -a
 
 rsync -a /data/system/ssh/* /etc/ssh/
-service sshd restart
+systemctl restart sshd
 
 mkdir -p /root/.ssh
 cat /data/system/authorized_keys > /root/.ssh/authorized_keys
@@ -66,7 +66,7 @@ Type=forking
 EnvironmentFile=-/etc/sysconfig/slurmd
 ExecStart=/opt/slurm/sbin/slurmd $SLURMD_OPTIONS
 ExecReload=/bin/kill -HUP $MAINPID
-PIDFile=/var/run/slurmd.pid
+PIDFile=/run/slurmd.pid
 KillMode=process
 LimitNOFILE=51200
 LimitMEMLOCK=infinity

@@ -18,7 +18,7 @@
           "NodeSize": "Standard_D8s_v3",
           "ImageOffer": "CentOS",
           "scaleNumber": 2,
-          "nodeParameters": "CPUs=8 RealMemory=32000",
+          "nodeParameters": "CPUs=8 Boards=1 SocketsPerBoard=1 CoresPerSocket=4 ThreadsPerCore=2 RealMemory=32000",
           "partitionParameters": "MaxTime=30 DefMemPerCPU=4000"
 	},
         {
