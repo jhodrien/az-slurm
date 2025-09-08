@@ -41,12 +41,6 @@
     },
     "servicePrincipalSecret": {
       "value": "GUID"
-     },
-    "userGroupID": {
-      "value": "GUID"
-     },
-    "adminGroupID": {
-      "value": "GUID"
-    }
+     }
   }
 }

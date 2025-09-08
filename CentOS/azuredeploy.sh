@@ -44,6 +44,7 @@ ssh_known_hosts=/tmp/ssh_known_hosts.$$
 shosts_equiv=/tmp/shosts.equiv.$$
 
 # Enable EPEL and get a JSON parser
+/usr/bin/crb enable
 yum -y install epel-release
 yum -y install jq
 
@@ -105,6 +106,7 @@ systemctl start nfs-idmapd
 # Configure data disks and export via an NFS share
 DATADISKS=/dev/disk/azure/scsi1/*
 
+yum -y install lvm2
 pvcreate $DATADISKS
 vgcreate vg_data $DATADISKS
 lvcreate -n lv_data -l 100%FREE vg_data
@@ -408,6 +410,6 @@ cat > /etc/cron.d/sync-aadpasswd <<EOB
 EOB
 
 # Install some local packages
-yum -y install glfw-devel opencl-headers openmpi3-devel
+yum -y install glfw-devel opencl-headers openmpi-devel
 
 exit 0

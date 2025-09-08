@@ -9,4 +9,4 @@ ACTION=${2-validate}
 
 echo $ACTION
 
-az deployment group $ACTION --name azure-slurm-test --resource-group $RG --template-file azuredeploy.json --parameters $TARGET/azuredeploy.parameters.json
+az deployment group $ACTION --name new-azure-slurm-test --resource-group $RG --template-file azuredeploy.json --parameters $TARGET/azuredeploy.parameters.json --debug

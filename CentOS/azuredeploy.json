@@ -9,18 +9,6 @@
     "partitions": {
       "type": "array"
     },
-    "userGroupID": {
-      "type": "string",
-      "metadata": {
-        "description": "Group to allow user logins"
-      }
-    },
-    "adminGroupID": {
-      "type": "string",
-      "metadata": {
-        "description": "Group to allow user logins and sudo"
-      }
-    },
     "servicePrincipalID": {
       "type": "string",
       "metadata": {
@@ -127,9 +115,9 @@
   },
   "variables": {
     "dnsName": "[concat('slurm-', uniqueString(resourceGroup().id))]",
-    "imagePublisher": "OpenLogic",
-    "headImageOffer": "CentOS",
-    "centOSVersion": "7_9-gen2",
+    "imagePublisher": "almalinux",
+    "headImageOffer": "almalinux-x86_64",
+    "centOSVersion": "9-gen2",
     "publicIPAddressName": "publicip",
     "vmNameMaster": "master",
     "nicNameMaster": "nic",
@@ -273,14 +261,14 @@
             },
             "imagePublisher": {
               "type": "string",
-              "defaultValue": "OpenLogic"
+              "defaultValue": "almalinux"
             },
             "ImageOffer": {
               "type": "string"
             },
             "centOSVersion": {
               "type": "string",
-              "defaultValue": "7_9-gen2"
+              "defaultValue": "9-gen2"
             },
             "adminUsername": {
               "type": "string"
@@ -421,28 +409,12 @@
                   ]
                 },
               {
-                "name": "AADSSHLoginForLinux",
-                "type": "extensions",
-                "apiVersion": "2020-06-01",
-                "location": "[parameters('location')]",
-                "properties": {
-                  "publisher": "Microsoft.Azure.ActiveDirectory",
-                  "type": "AADSSHLoginForLinux",
-                  "typeHandlerVersion": "1.0",
-                  "autoUpgradeMinorVersion": true
-                },
-                "dependsOn": [
-                  "[concat('Microsoft.Compute/virtualMachines/',parameters('vmName'), copyindex())]"
-                ]
-              },
-              {
                 "apiVersion": "2020-06-01",
                 "type": "extensions",
                 "name": "WorkerInstallation",
                 "location": "[parameters('location')]",
                 "dependsOn": [
-                  "[concat('Microsoft.Compute/virtualMachines/',parameters('vmName'), copyindex())]",
-                  "AADSSHLoginForLinux"
+                  "[concat('Microsoft.Compute/virtualMachines/',parameters('vmName'), copyindex())]"
                 ],
                 "properties": {
                   "publisher": "Microsoft.Azure.Extensions",
@@ -592,45 +564,6 @@
         }
       },
       "resources": [
-        {
-          "apiVersion": "2020-04-01-preview",
-          "name": "[concat(variables('vmNameMaster'), '/Microsoft.Authorization/', guid(resourceGroup().id, variables('vmNameMaster'), 'userGroup'))]",
-          "type": "Microsoft.Compute/virtualMachines/providers/roleAssignments",
-          "properties": {
-            "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'fb879df8-f326-4884-b1cf-06f3ad86be52')]",
-            "principalId": "[parameters('userGroupID')]"
-          },
-          "dependsOn": [
-            "[concat('Microsoft.Compute/virtualMachines/',variables('vmNameMaster'))]"
-          ]
-        },
-        {
-          "apiVersion": "2020-04-01-preview",
-          "name": "[concat(variables('vmNameMaster'), '/Microsoft.Authorization/', guid(resourceGroup().id, variables('vmNameMaster'), 'adminGroup'))]",
-          "type": "Microsoft.Compute/virtualMachines/providers/roleAssignments",
-          "properties": {
-            "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '1c0163c0-47e6-4577-8991-ea5c82e286e4')]",
-            "principalId": "[parameters('adminGroupID')]"
-          },
-          "dependsOn": [
-            "[concat('Microsoft.Compute/virtualMachines/',variables('vmNameMaster'))]"
-          ]
-        },
-        {
-          "name": "[concat(variables('vmNameMaster'),'/', 'AADSSHLoginForLinux')]",
-          "type": "Microsoft.Compute/virtualMachines/extensions",
-          "apiVersion": "2020-06-01",
-          "location": "[parameters('location')]",
-          "properties": {
-            "publisher": "Microsoft.Azure.ActiveDirectory",
-            "type": "AADSSHLoginForLinux",
-            "typeHandlerVersion": "1.0",
-            "autoUpgradeMinorVersion": true
-          },
-          "dependsOn": [
-            "[concat('Microsoft.Compute/virtualMachines/',variables('vmNameMaster'))]"
-          ]
-        },
         {
           "apiVersion": "2020-06-01",
           "type": "extensions",

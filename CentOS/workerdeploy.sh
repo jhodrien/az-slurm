@@ -94,7 +94,7 @@ systemctl start munge
 systemctl enable slurmd
 
 # Install OpenMPI
-yum -y install openmpi3-devel
+yum -y install openmpi-devel
 # Fix broken tmpfilesd
 systemctl enable systemd-tmpfiles-setup
 
